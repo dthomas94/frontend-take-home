@@ -13,7 +13,6 @@ type RolesTableProps = {
 
 const columnHelper = createColumnHelper<Role>();
 export function RolesTable({ data, onClickRemoveRole }: RolesTableProps) {
-  console.log(data);
   const roleColumns = useMemo(
     () => [
       columnHelper.accessor("name", {

@@ -1,3 +1,8 @@
+type AppData = {
+  users: User[];
+  roles: Role[];
+};
+
 type User = {
   id: string;
   createdAt: string;
@@ -17,4 +22,4 @@ type Role = {
   isDefault: boolean;
 };
 
-export { type User, type Role };
+export { type AppData, type User, type Role };

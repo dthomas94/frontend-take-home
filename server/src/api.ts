@@ -48,8 +48,6 @@ function getPagedData<T extends User | Role>(
     data = fullTextSearch(data, searchFields, search);
   }
 
-  console.log(data);
-
   data.sort(sortBy);
 
   const page = +(req.query.page || 1) || 1;
@@ -212,7 +210,6 @@ api.patch("/users/:id", (req, res) => {
 });
 
 api.post("/users", (req, res) => {
-  console.log(req.body);
   const { first, last, roleId } = req.body;
 
   const missingFields = [

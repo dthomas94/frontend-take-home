@@ -1,17 +1,12 @@
 import { Tabs } from "radix-ui";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import { Role, User } from "./utils/types";
+import { AppData } from "./utils/types";
 import { UsersTable } from "./components/tables/UsersTable";
 import { deleteRole, deleteUser, getRoles, getUsers, initApp } from "./api";
 import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
 import { SearchInput } from "./inputs/SearchInput";
 import { Button } from "@radix-ui/themes";
 import { RolesTable } from "./components/tables/RolesTable";
-
-type AppData = {
-  users: User[];
-  roles: Role[];
-};
 
 function App() {
   const [appData, setAppData] = useState<AppData>({ users: [], roles: [] });
@@ -58,8 +53,6 @@ function App() {
     }
     init();
   }, []);
-
-  console.log(appData.roles);
 
   return (
     <div className="App">
