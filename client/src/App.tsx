@@ -2,7 +2,7 @@ import { Tabs } from "radix-ui";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Role, User } from "./utils/types";
 import { UsersTable } from "./components/tables/UsersTable";
-import { deleteUser, getRoles, getUsers, initApp } from "./api";
+import { deleteRole, deleteUser, getRoles, getUsers, initApp } from "./api";
 import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
 import { SearchInput } from "./inputs/SearchInput";
 import { Button } from "@radix-ui/themes";
@@ -33,6 +33,16 @@ function App() {
       setAppData((prev) => ({
         ...prev,
         users: prev.users.filter((user) => user.id !== id),
+      }));
+    }
+  }, []);
+
+  const removeRole = useCallback(async (id: string) => {
+    const delRole = await deleteRole(id);
+    if (delRole) {
+      setAppData((prev) => ({
+        ...prev,
+        roles: prev.roles.filter((role) => role.id !== id),
       }));
     }
   }, []);
@@ -92,9 +102,9 @@ function App() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log("Add user");
+              console.log("Add Role");
               // if (searchRef.current?.value) {
-              //   addUser(searchRef.current.value);
+              //   addRole(searchRef.current.value);
               // }
             }}
           >
@@ -111,7 +121,7 @@ function App() {
               <PlusIcon /> Add Role
             </Button>
           </form>
-          <RolesTable data={appData?.roles} onClickRemoveRole={() => {}} />
+          <RolesTable data={appData?.roles} onClickRemoveRole={removeRole} />
         </Tabs.Content>
       </Tabs.Root>
     </div>

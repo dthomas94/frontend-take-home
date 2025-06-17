@@ -69,10 +69,27 @@ async function deleteUser(id: string) {
   }
 }
 
+async function deleteRole(id: string) {
+  try {
+    const res = await fetch(`${BASE_API_URL}/roles/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const roleData = await res.json();
+    return roleData as Role;
+  } catch (err: any) {
+    console.error(err.message);
+    throw err;
+  }
+}
+
 async function initApp() {
   const [users, roles] = await Promise.all([getUsers(), getRoles()]);
 
   return { users, roles };
 }
 
-export { addUser, getUsers, getRoles, deleteUser, initApp };
+export { addUser, getUsers, getRoles, deleteUser, initApp, deleteRole };
