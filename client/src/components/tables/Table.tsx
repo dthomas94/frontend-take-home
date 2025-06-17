@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Table as RTable } from "@radix-ui/themes";
 
 type TableProps<T> = {
   data?: T[];
@@ -18,40 +19,40 @@ export function Table<T>({ data = [], columns }: TableProps<T>) {
   });
 
   return (
-    <table cellSpacing={0}>
-      <thead>
+    <RTable.Root size="2" variant="surface">
+      <RTable.Header>
         {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
+          <RTable.Row key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th key={header.id}>
+              <RTable.ColumnHeaderCell key={header.id}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
                       header.column.columnDef.header,
                       header.getContext()
                     )}
-              </th>
+              </RTable.ColumnHeaderCell>
             ))}
-          </tr>
+          </RTable.Row>
         ))}
-      </thead>
-      <tbody>
+      </RTable.Header>
+      <RTable.Body>
         {data.length ? (
           table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <RTable.Row key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <RTable.Cell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+                </RTable.Cell>
               ))}
-            </tr>
+            </RTable.Row>
           ))
         ) : (
           <tr>
             <td>Loading...</td>
           </tr>
         )}
-      </tbody>
-    </table>
+      </RTable.Body>
+    </RTable.Root>
   );
 }

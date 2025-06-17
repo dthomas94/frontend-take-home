@@ -41,14 +41,15 @@ function App() {
         roles,
       }));
     }
-
     init();
   }, []);
+
+  console.log(appData.roles);
 
   return (
     <div className="App">
       <Tabs.Root className="TabsRoot" defaultValue="users">
-        <Tabs.List className="TabsList">
+        <Tabs.List className="TabsList" color="var(--purple-indicator)">
           <Tabs.Trigger className="TabsTrigger" value="users">
             Users
           </Tabs.Trigger>

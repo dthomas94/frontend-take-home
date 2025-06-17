@@ -136,36 +136,8 @@ form {
 }
 
 table {
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--gray-6);
-  border-radius: 8px;
-  overflow: hidden;
-
   thead {
     background-color: var(--gray-2);
-
-    tr {
-      height: 44px;
-
-      th {
-        padding: 0;
-        border-bottom: 1px solid var(--gray-6);
-        font-size: var(--font-size-2);
-        padding: 10px 12px;
-      }
-    }
-  }
-
-  tbody {
-    tr {
-      height: 44px;
-    }
-    td {
-      border-bottom: 1px solid var(--gray-6);
-      font-size: var(--font-size-2);
-      padding: 10px 12px;
-    }
   }
 }
 
