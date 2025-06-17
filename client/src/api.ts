@@ -37,6 +37,7 @@ async function getRoles() {
   }
 }
 
+// keep getting the "missing fields" error for all fields. Even tried sending data via Postman and the error still occurs
 async function addUser(name: string) {
   const [first, last] = name.split(" ");
   const formData = new FormData();
