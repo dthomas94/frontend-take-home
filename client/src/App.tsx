@@ -2,26 +2,33 @@ import { Tabs } from "radix-ui";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Role, User } from "./utils/types";
 import { UsersTable } from "./components/tables/UsersTable";
-import { deleteUser, getUsers, initApp, addUser as addUserApi } from "./api";
+import { deleteUser, getUsers, initApp } from "./api";
 import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
 import { SearchInput } from "./inputs/SearchInput";
 import { Button } from "@radix-ui/themes";
 import { RolesTable } from "./components/tables/RolesTable";
 
+type AppData = {
+  users: User[];
+  roles: Role[];
+};
+
 function App() {
-  const [userData, setUserData] = useState<User[]>([]);
-  const [rolesData, setRolesData] = useState<Role[]>([]);
+  const [appData, setAppData] = useState<AppData>({ users: [], roles: [] });
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   const searchUsers = useCallback(async (q?: string) => {
     const users = await getUsers(q);
-    setUserData(users);
+    setAppData((prev) => ({ ...prev, users }));
   }, []);
 
   const removeUser = useCallback(async (id: string) => {
     const delUser = await deleteUser(id);
     if (delUser) {
-      setUserData((prevData) => prevData.filter((user) => user.id !== id));
+      setAppData((prev) => ({
+        ...prev,
+        users: prev.users.filter((user) => user.id !== id),
+      }));
     }
   }, []);
 
@@ -29,8 +36,10 @@ function App() {
     async function init() {
       const { users, roles } = await initApp();
 
-      setUserData(users);
-      setRolesData(roles);
+      setAppData(() => ({
+        users,
+        roles,
+      }));
     }
 
     init();
@@ -70,10 +79,10 @@ function App() {
           </Button>
         </form>
         <Tabs.Content value="users" className="TabsContent">
-          <UsersTable data={userData} onClickRemoveUser={removeUser} />
+          <UsersTable data={appData?.users} onClickRemoveUser={removeUser} />
         </Tabs.Content>
         <Tabs.Content value="roles">
-          <RolesTable data={rolesData} onClickRemoveRole={() => {}} />
+          <RolesTable data={appData?.roles} onClickRemoveRole={() => {}} />
         </Tabs.Content>
       </Tabs.Root>
     </div>

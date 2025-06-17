@@ -6,11 +6,11 @@ import {
 } from "@tanstack/react-table";
 
 type TableProps<T> = {
-  data: T[];
+  data?: T[];
   columns: ColumnDef<T, any>[];
 };
 
-export function Table<T>({ data, columns }: TableProps<T>) {
+export function Table<T>({ data = [], columns }: TableProps<T>) {
   const table = useReactTable({
     columns,
     data,

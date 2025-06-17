@@ -7,7 +7,7 @@ import { Button, IconButton } from "@radix-ui/themes";
 import { Table } from "./Table";
 
 type RolesTableProps = {
-  data: Role[];
+  data?: Role[];
   onClickRemoveRole: (id: string) => void;
 };
 

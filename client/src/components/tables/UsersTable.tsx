@@ -7,7 +7,7 @@ import { Button, Flex, IconButton } from "@radix-ui/themes";
 import { Table } from "./Table";
 
 type UsersTableProps = {
-  data: User[];
+  data?: User[];
   onClickRemoveUser: (id: string) => void;
 };
 
