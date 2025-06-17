@@ -1,14 +1,10 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { User } from "../../utils/types";
 import { Avatar, DropdownMenu } from "radix-ui";
 import { DotsHorizontalIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button, Flex, IconButton } from "@radix-ui/themes";
+import { Table } from "./Table";
 
 type UsersTableProps = {
   data: User[];
@@ -92,47 +88,5 @@ export function UsersTable({ data, onClickRemoveUser }: UsersTableProps) {
     [onClickRemoveUser]
   );
 
-  const usersTable = useReactTable({
-    columns: userColumns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <table cellSpacing={0}>
-      <thead>
-        {usersTable.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {data.length ? (
-          usersTable.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))
-        ) : (
-          <tr>
-            <td>Loading...</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  );
+  return <Table<User> data={data} columns={userColumns} />;
 }

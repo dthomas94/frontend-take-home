@@ -6,6 +6,7 @@ import { deleteUser, getUsers, initApp, addUser as addUserApi } from "./api";
 import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
 import { SearchInput } from "./inputs/SearchInput";
 import { Button } from "@radix-ui/themes";
+import { RolesTable } from "./components/tables/RolesTable";
 
 function App() {
   const [userData, setUserData] = useState<User[]>([]);
@@ -16,10 +17,6 @@ function App() {
     const users = await getUsers(q);
     setUserData(users);
   }, []);
-
-  const addUser = async (name: string) => {
-    await addUserApi(name);
-  };
 
   const removeUser = useCallback(async (id: string) => {
     const delUser = await deleteUser(id);
@@ -53,9 +50,10 @@ function App() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (searchRef.current?.value) {
-              addUser(searchRef.current.value);
-            }
+            console.log("Add user");
+            // if (searchRef.current?.value) {
+            //   addUser(searchRef.current.value);
+            // }
           }}
         >
           <SearchInput
@@ -75,7 +73,7 @@ function App() {
           <UsersTable data={userData} onClickRemoveUser={removeUser} />
         </Tabs.Content>
         <Tabs.Content value="roles">
-          {rolesData.map((r) => r.description)}
+          <RolesTable data={rolesData} onClickRemoveRole={() => {}} />
         </Tabs.Content>
       </Tabs.Root>
     </div>
