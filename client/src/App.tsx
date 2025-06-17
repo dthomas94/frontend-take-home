@@ -1,134 +1,81 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Avatar, Tabs } from "radix-ui";
-import { useEffect, useState } from "react";
-import { User } from "./utils/types";
-
-const columnHelper = createColumnHelper<User>();
-
-const userColumns = [
-  columnHelper.accessor((row) => `${row.first} ${row.last}`, {
-    header: () => "User",
-    id: "user",
-    cell: ({ row }) => (
-      <Avatar.Root className="AvatarRoot">
-        <Avatar.Image
-          className="AvatarImage"
-          height="24"
-          width="24"
-          src={row.original.photo}
-          alt={`${row.original.first}${row.original.last}`}
-        />
-        <Avatar.Fallback className="AvatarFallback" delayMs={600}>
-          {row.original.first[0]}
-          {row.original.last[0]}
-        </Avatar.Fallback>
-      </Avatar.Root>
-    ),
-  }),
-  columnHelper.accessor("roleId", {
-    header: () => "Role",
-    cell: (info) => info.renderValue(),
-  }),
-  columnHelper.accessor("createdAt", {
-    header: () => <span>Joined</span>,
-    cell: ({ row }) => {
-      const joined = new Date(row.original.createdAt);
-      return (
-        <span>
-          {joined.toLocaleDateString("en-EN", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </span>
-      );
-    },
-  }),
-];
+import { Tabs } from "radix-ui";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Role, User } from "./utils/types";
+import { UsersTable } from "./components/tables/UsersTable";
+import { deleteUser, getUsers, initApp, addUser as addUserApi } from "./api";
+import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
+import { SearchInput } from "./inputs/SearchInput";
+import { Button } from "@radix-ui/themes";
 
 function App() {
   const [userData, setUserData] = useState<User[]>([]);
-  const usersTable = useReactTable({
-    columns: userColumns,
-    data: userData,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const [rolesData, setRolesData] = useState<Role[]>([]);
+  const searchRef = useRef<HTMLInputElement | null>(null);
 
-  console.log(userData);
+  const searchUsers = useCallback(async (q?: string) => {
+    const users = await getUsers(q);
+    setUserData(users);
+  }, []);
+
+  const addUser = async (name: string) => {
+    await addUserApi(name);
+  };
+
+  const removeUser = useCallback(async (id: string) => {
+    const delUser = await deleteUser(id);
+    if (delUser) {
+      setUserData((prevData) => prevData.filter((user) => user.id !== id));
+    }
+  }, []);
 
   useEffect(() => {
-    async function getUsers() {
-      const res = await fetch("http://localhost:3002/users");
+    async function init() {
+      const { users, roles } = await initApp();
 
-      if (res.ok) {
-        const userData = await res.json();
-
-        setUserData(userData.data);
-      }
+      setUserData(users);
+      setRolesData(roles);
     }
-    getUsers();
+
+    init();
   }, []);
+
   return (
     <div className="App">
-      <Tabs.Root>
-        <Tabs.List>
-          <Tabs.Trigger value="users">Users</Tabs.Trigger>
-          <Tabs.Trigger value="Roles">Roles</Tabs.Trigger>
+      <Tabs.Root className="TabsRoot" defaultValue="users">
+        <Tabs.List className="TabsList">
+          <Tabs.Trigger className="TabsTrigger" value="users">
+            Users
+          </Tabs.Trigger>
+          <Tabs.Trigger className="TabsTrigger" value="Roles">
+            Roles
+          </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content value="users">
-          <table>
-            <thead>
-              {usersTable.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {usersTable.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              {usersTable.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </tfoot>
-          </table>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (searchRef.current?.value) {
+              addUser(searchRef.current.value);
+            }
+          }}
+        >
+          <SearchInput
+            name="username"
+            ref={searchRef}
+            icon={<MagnifyingGlassIcon />}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              searchUsers(e.target.value)
+            }
+            placeholder="Search by name..."
+          />
+          <Button type="submit">
+            <PlusIcon /> Add User
+          </Button>
+        </form>
+        <Tabs.Content value="users" className="TabsContent">
+          <UsersTable data={userData} onClickRemoveUser={removeUser} />
+        </Tabs.Content>
+        <Tabs.Content value="roles">
+          {rolesData.map((r) => r.description)}
         </Tabs.Content>
       </Tabs.Root>
     </div>

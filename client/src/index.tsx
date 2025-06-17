@@ -5,15 +5,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Theme } from "@radix-ui/themes";
 import "./index.css";
+import { BrowserRouter } from "react-router";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Theme>
-      <App />
-    </Theme>
+    <BrowserRouter>
+      <Theme>
+        <App />
+      </Theme>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
