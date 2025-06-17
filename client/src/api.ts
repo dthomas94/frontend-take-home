@@ -4,10 +4,7 @@ const BASE_API_URL = "http://localhost:3002";
 
 async function getUsers(q?: string) {
   try {
-    const res = await fetch(
-      `${BASE_API_URL}/users${q ? `?search=${q}` : ""}`,
-      {}
-    );
+    const res = await fetch(`${BASE_API_URL}/users${q ? `?search=${q}` : ""}`);
 
     if (!res.ok) {
       throw new Error(res.statusText);
@@ -21,9 +18,9 @@ async function getUsers(q?: string) {
   }
 }
 
-async function getRoles() {
+async function getRoles(q?: string) {
   try {
-    const res = await fetch(`${BASE_API_URL}/roles`);
+    const res = await fetch(`${BASE_API_URL}/roles${q ? `?search=${q}` : ""}`);
 
     if (!res.ok) {
       throw new Error(res.statusText);
