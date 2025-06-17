@@ -33,7 +33,7 @@ async function getRoles() {
     return rolesData.data as Role[];
   } catch (err: any) {
     console.error(err.message);
-    throw err;
+    return [];
   }
 }
 

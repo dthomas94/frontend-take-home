@@ -49,11 +49,11 @@ function App() {
   return (
     <div className="App">
       <Tabs.Root className="TabsRoot" defaultValue="users">
-        <Tabs.List className="TabsList" color="var(--purple-indicator)">
+        <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="users">
             Users
           </Tabs.Trigger>
-          <Tabs.Trigger className="TabsTrigger" value="Roles">
+          <Tabs.Trigger className="TabsTrigger" value="roles">
             Roles
           </Tabs.Trigger>
         </Tabs.List>
@@ -82,7 +82,7 @@ function App() {
         <Tabs.Content value="users" className="TabsContent">
           <UsersTable data={appData?.users} onClickRemoveUser={removeUser} />
         </Tabs.Content>
-        <Tabs.Content value="roles">
+        <Tabs.Content value="roles" className="TabsContent">
           <RolesTable data={appData?.roles} onClickRemoveRole={() => {}} />
         </Tabs.Content>
       </Tabs.Root>
